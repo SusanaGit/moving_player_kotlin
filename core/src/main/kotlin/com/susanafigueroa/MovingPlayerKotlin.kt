@@ -8,23 +8,25 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.ScreenUtils
 import com.badlogic.gdx.utils.viewport.StretchViewport
 import helpers.GameInfo
+import scenes.MainMenu
 
 class MovingPlayerKotlin : Game() {
 
     private lateinit var batch: SpriteBatch
 
-    override fun create() {
-        TODO("Not yet implemented")
-    }
-
-    override fun render() {
-
-    }
-
     val getBatch: SpriteBatch
         get() = batch
 
-    /*private lateinit var image: Texture
+    override fun create() {
+        batch = SpriteBatch()
+        setScreen(MainMenu(this))
+    }
+
+    override fun render() {
+        super.render()
+    }
+
+    /*
     private lateinit var turtle: Sprite
 
     // I want to use the WIDTH and the HEIGHT of the GameInfo to declare thing positions and sizes
@@ -42,8 +44,8 @@ class MovingPlayerKotlin : Game() {
         camera.position.set(GameInfo.WIDTH/2f, GameInfo.HEIGHT/2f, 0f)
         camera.update()
 
-        batch = SpriteBatch()
-        image = Texture("Game BG.png")
+
+
         turtle = Sprite(Texture("turtle.png"))
 
         turtle.setPosition((GameInfo.WIDTH/2).toFloat(), 0f)
@@ -54,11 +56,7 @@ class MovingPlayerKotlin : Game() {
 
         camera.update()
         batch.setProjectionMatrix(camera.combined);
-
-        batch.begin()
-        batch.draw(image, 0f, 0f, GameInfo.WIDTH.toFloat(), GameInfo.HEIGHT.toFloat())
         batch.draw(turtle, turtle.x, turtle.y, 200f, 200f)
-        batch.end()
     }
 
     override fun resize(width: Int, height: Int) {
