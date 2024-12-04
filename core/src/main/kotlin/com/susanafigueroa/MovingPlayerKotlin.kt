@@ -12,7 +12,19 @@ import helpers.GameInfo
 class MovingPlayerKotlin : Game() {
 
     private lateinit var batch: SpriteBatch
-    private lateinit var image: Texture
+
+    override fun create() {
+        TODO("Not yet implemented")
+    }
+
+    override fun render() {
+
+    }
+
+    val getBatch: SpriteBatch
+        get() = batch
+
+    /*private lateinit var image: Texture
     private lateinit var turtle: Sprite
 
     // I want to use the WIDTH and the HEIGHT of the GameInfo to declare thing positions and sizes
@@ -57,5 +69,5 @@ class MovingPlayerKotlin : Game() {
         batch.dispose()
         image.dispose()
         turtle.getTexture().dispose()
-    }
+    }*/
 }
