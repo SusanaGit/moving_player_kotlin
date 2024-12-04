@@ -11,28 +11,23 @@ import helpers.GameInfo
 
 class MainMenu (private var movingPlayerKotlin: MovingPlayerKotlin) : Screen {
 
-    // I want to use the WIDTH and the HEIGHT of the GameInfo to declare thing positions and sizes
-    // OrthographicCamera -> defines 2D perspective of the game
-    private lateinit var camera: OrthographicCamera
+    private val imageBackground: Texture = Texture("Game BG.png")
+    private var turtle: Sprite = Sprite(Texture("turtle.png")).apply {
+        setPosition((GameInfo.WIDTH/2).toFloat(), 0f)
+    }
 
-    // StretchViewport -> to maintain a fixed aspect ratio
-    private lateinit var viewport: StretchViewport
+    private val camera: OrthographicCamera = OrthographicCamera().apply {
+        position.set(GameInfo.WIDTH/2f, GameInfo.HEIGHT/2f, 0f)
+        update()
+    }
 
-    private lateinit var imageBackground: Texture
-    private lateinit var turtle: Sprite
+    private val viewport: StretchViewport = StretchViewport(
+        GameInfo.WIDTH.toFloat(),
+        GameInfo.HEIGHT.toFloat(), camera
+    )
 
     override fun show() {
-        // initialize camera and viewport
-        camera = OrthographicCamera()
-        viewport = StretchViewport(GameInfo.WIDTH.toFloat(), GameInfo.HEIGHT.toFloat(), camera)
 
-        // set the position of the camera in the middle of the screen
-        camera.position.set(GameInfo.WIDTH/2f, GameInfo.HEIGHT/2f, 0f)
-        camera.update()
-
-        imageBackground = Texture("Game BG.png")
-        turtle = Sprite(Texture("turtle.png"))
-        turtle.setPosition((GameInfo.WIDTH/2).toFloat(), 0f)
     }
 
     override fun render(delta: Float) {
