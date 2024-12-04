@@ -33,6 +33,8 @@ class MovingPlayerKotlin : Game() {
         batch = SpriteBatch()
         image = Texture("Game BG.png")
         turtle = Sprite(Texture("turtle.png"))
+
+        turtle.setPosition((GameInfo.WIDTH/2).toFloat(), 0f)
     }
 
     override fun render() {
@@ -43,7 +45,7 @@ class MovingPlayerKotlin : Game() {
 
         batch.begin()
         batch.draw(image, 0f, 0f, GameInfo.WIDTH.toFloat(), GameInfo.HEIGHT.toFloat())
-        batch.draw(turtle, (GameInfo.WIDTH/2).toFloat(), 0f, 200f, 200f)
+        batch.draw(turtle, turtle.x, turtle.y, 200f, 200f)
         batch.end()
     }
 
