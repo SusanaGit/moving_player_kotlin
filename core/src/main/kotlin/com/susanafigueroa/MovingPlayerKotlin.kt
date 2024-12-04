@@ -1,9 +1,9 @@
 package com.susanafigueroa
 
 import com.badlogic.gdx.Game
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.ScreenUtils
 import com.badlogic.gdx.utils.viewport.StretchViewport
@@ -13,7 +13,7 @@ class MovingPlayerKotlin : Game() {
 
     private lateinit var batch: SpriteBatch
     private lateinit var image: Texture
-    private lateinit var turtle: Texture
+    private lateinit var turtle: Sprite
 
     // I want to use the WIDTH and the HEIGHT of the GameInfo to declare thing positions and sizes
     // OrthographicCamera -> defines 2D perspective of the game
@@ -32,7 +32,7 @@ class MovingPlayerKotlin : Game() {
 
         batch = SpriteBatch()
         image = Texture("Game BG.png")
-        turtle = Texture("turtle.png")
+        turtle = Sprite(Texture("turtle.png"))
     }
 
     override fun render() {
@@ -54,6 +54,6 @@ class MovingPlayerKotlin : Game() {
     override fun dispose() {
         batch.dispose()
         image.dispose()
-        turtle.dispose()
+        turtle.getTexture().dispose()
     }
 }
