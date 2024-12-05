@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.ScreenUtils
 import com.badlogic.gdx.utils.viewport.StretchViewport
 import com.susanafigueroa.MovingPlayerKotlin
@@ -22,9 +24,10 @@ class MainMenu (
     private var tiledMap: TiledMap
     private var mapRenderer: OrthogonalTiledMapRenderer
     private var turtle: Sprite
+    private var world: World
 
     init {
-
+        world = World(Vector2(0f, -9f), true)
         mapLoader = TmxMapLoader();
         tiledMap = mapLoader.load("mapa.tmx")
         mapRenderer = OrthogonalTiledMapRenderer(tiledMap)
@@ -40,7 +43,7 @@ class MainMenu (
             camera
         )
 
-        turtle = Player("turtle.png", GameInfo.WIDTH.toFloat() / 2, GameInfo.HEIGHT.toFloat() / 2)
+        turtle = Player(world, "turtle.png", GameInfo.WIDTH.toFloat() / 2, GameInfo.HEIGHT.toFloat() / 2)
     }
 
     override fun show() {

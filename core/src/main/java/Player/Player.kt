@@ -9,13 +9,14 @@ import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
 
-class Player( name: String, x: Float, y: Float
+class Player( world: World, name: String, x: Float, y: Float
 ) : Sprite(Texture(name)) {
 
-    private lateinit var world: World
+    private val world: World
     private lateinit var body: Body
 
     init {
+        this.world = world;
         setSize(200f, 200f)
         setPosition(x - width / 2, y - height / 2)
     }
