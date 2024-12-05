@@ -5,8 +5,8 @@ class GameInfo {
 
     // to define static members of the class
     companion object {
-        const val WIDTH = 480
-        const val HEIGHT = 800
+        const val WIDTH = 960
+        const val HEIGHT = 640
     }
 
 }

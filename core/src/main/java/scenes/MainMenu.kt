@@ -3,8 +3,10 @@ package scenes
 import Player.Player
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
+import com.badlogic.gdx.maps.tiled.TiledMap
+import com.badlogic.gdx.maps.tiled.TmxMapLoader
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.utils.ScreenUtils
 import com.badlogic.gdx.utils.viewport.StretchViewport
 import com.susanafigueroa.MovingPlayerKotlin
@@ -14,15 +16,18 @@ class MainMenu (
     private var movingPlayerKotlin: MovingPlayerKotlin,
 ) : Screen {
 
-    private val imageBackground: Texture
-    private var turtle: Sprite
     private val camera: OrthographicCamera
     private val viewport: StretchViewport
+    private val mapLoader: TmxMapLoader
+    private var tiledMap: TiledMap
+    private var mapRenderer: OrthogonalTiledMapRenderer
+    private var turtle: Sprite
 
     init {
-        imageBackground = Texture("Game BG.png")
 
-        turtle = Player("turtle.png", GameInfo.WIDTH.toFloat() / 2, GameInfo.HEIGHT.toFloat() / 2)
+        mapLoader = TmxMapLoader();
+        tiledMap = mapLoader.load("mapa.tmx")
+        mapRenderer = OrthogonalTiledMapRenderer(tiledMap)
 
         camera = OrthographicCamera().apply {
             position.set(GameInfo.WIDTH / 2f, GameInfo.HEIGHT / 2f, 0f)
@@ -34,6 +39,8 @@ class MainMenu (
             GameInfo.HEIGHT.toFloat(),
             camera
         )
+
+        turtle = Player("turtle.png", GameInfo.WIDTH.toFloat() / 2, GameInfo.HEIGHT.toFloat() / 2)
     }
 
     override fun show() {
@@ -44,9 +51,13 @@ class MainMenu (
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f)
 
         camera.update()
+
+        mapRenderer.setView(camera)
+        mapRenderer.render()
+
         movingPlayerKotlin.getBatch.setProjectionMatrix(camera.combined)
+
         movingPlayerKotlin.getBatch.begin()
-        movingPlayerKotlin.getBatch.draw(imageBackground, 0f, 0f, GameInfo.WIDTH.toFloat(), GameInfo.HEIGHT.toFloat())
         movingPlayerKotlin.getBatch.draw(turtle, turtle.x, turtle.y, 200f, 200f)
         movingPlayerKotlin.getBatch.end()
     }
@@ -69,7 +80,7 @@ class MainMenu (
 
     override fun dispose() {
         movingPlayerKotlin.getBatch.dispose()
-        imageBackground.dispose()
+        tiledMap.dispose()
         turtle.texture.dispose()
     }
 
