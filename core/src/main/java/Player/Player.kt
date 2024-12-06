@@ -24,6 +24,9 @@ class Player( world: World, name: String, x: Float, y: Float
     fun createBody() {
         val bodyDef: BodyDef = BodyDef()
         bodyDef.type = BodyDef.BodyType.DynamicBody
+
+        bodyDef.position.set(x, y)
+
         body = world.createBody(bodyDef)
 
         val shape: PolygonShape = PolygonShape()
@@ -36,5 +39,9 @@ class Player( world: World, name: String, x: Float, y: Float
         val fixture: Fixture = body.createFixture(fixtureDef)
 
         shape.dispose()
+    }
+
+    fun updatePlayer() {
+        this.setPosition(body.position.x, body.position.y)
     }
 }

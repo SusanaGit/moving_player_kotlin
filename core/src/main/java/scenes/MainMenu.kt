@@ -24,7 +24,7 @@ class MainMenu (
     private val mapLoader: TmxMapLoader
     private var tiledMap: TiledMap
     private var mapRenderer: OrthogonalTiledMapRenderer
-    private var turtle: Sprite
+    private var turtle: Player
     private var world: World
 
     init {
@@ -45,6 +45,7 @@ class MainMenu (
         )
 
         turtle = Player(world, "turtle.png", GameInfo.WIDTH.toFloat() / 2, GameInfo.HEIGHT.toFloat() / 2)
+        turtle.createBody()
     }
 
     override fun show() {
@@ -52,6 +53,9 @@ class MainMenu (
     }
 
     override fun render(delta: Float) {
+
+        turtle.updatePlayer()
+
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f)
 
         camera.update()
