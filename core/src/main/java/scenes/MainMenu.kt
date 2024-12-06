@@ -1,6 +1,7 @@
 package scenes
 
 import Player.Player
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Sprite
@@ -63,6 +64,8 @@ class MainMenu (
         movingPlayerKotlin.getBatch.begin()
         movingPlayerKotlin.getBatch.draw(turtle, turtle.x, turtle.y, 200f, 200f)
         movingPlayerKotlin.getBatch.end()
+
+        world.step(Gdx.graphics.getDeltaTime(), 6, 2)
     }
 
     override fun resize(width: Int, height: Int) {
