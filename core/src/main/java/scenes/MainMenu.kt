@@ -1,10 +1,10 @@
 package scenes
 
 import Player.Player
+import bodiesmap.BodiesMap
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
@@ -26,6 +26,7 @@ class MainMenu (
     private var mapRenderer: OrthogonalTiledMapRenderer
     private var turtle: Player
     private var world: World
+    private val bodiesMap: BodiesMap
 
     init {
         world = World(Vector2(0f, -9f), true)
@@ -46,6 +47,9 @@ class MainMenu (
 
         turtle = Player(world, "turtle.png", GameInfo.WIDTH.toFloat() / 2, GameInfo.HEIGHT.toFloat() / 2)
         turtle.createBody()
+
+        bodiesMap = BodiesMap()
+        bodiesMap.createStaticBodiesFromMap(tiledMap, world)
     }
 
     override fun show() {
