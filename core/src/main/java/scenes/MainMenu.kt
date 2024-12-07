@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.ScreenUtils
 import com.badlogic.gdx.utils.viewport.StretchViewport
+import com.sun.jdi.IntegerValue
 import com.susanafigueroa.MovingPlayerKotlin
 import helpers.GameInfo
 
@@ -108,9 +109,41 @@ class MainMenu (
 
     }
 
+    private fun updateCamera() {
+        val positionPlayerTurtle = turtle.body.position // 4.8ppm x | 3.2ppm y
+
+        val mapWidthTiles = tiledMap.properties.get("width", Int::class.java)
+        val mapHeightTiles = tiledMap.properties.get("height", Int::class.java)
+        Gdx.app.log("TILES MAP WIDTH", mapWidthTiles.toString()) // 300
+        Gdx.app.log("TILES MAP HEIGHT", mapHeightTiles.toString()) // 40
+
+        val mapWidthPixels = mapWidthTiles * 32f
+        val mapHeightPixels = mapHeightTiles * 32f
+        Gdx.app.log("PIXELS MAP WIDTH", mapWidthPixels.toString()) // 300 * 32 = 9600
+        Gdx.app.log("PIXELS MAP HEIGHT", mapHeightPixels.toString()) // 40 * 32 = 1280
+
+        val cameraWidth = camera.viewportWidth
+        val cameraHeight = camera.viewportHeight
+        Gdx.app.log("CAMERA WIDTH", cameraWidth.toString()) // 960
+        Gdx.app.log("CAMERA HEIGHT", cameraHeight.toString()) // 640
+
+        val cameraX = (cameraWidth / 2).coerceAtLeast(
+            (positionPlayerTurtle.x * GameInfo.PPM).coerceAtMost(mapWidthPixels - cameraWidth / 2)
+        );
+        val cameraY = (cameraHeight / 2).coerceAtLeast(
+            (positionPlayerTurtle.y * GameInfo.PPM).coerceAtMost(mapHeightPixels - cameraHeight / 2)
+        );
+
+        camera.position.set(cameraX, cameraY, 0f)
+
+        camera.update()
+    }
+
     override fun render(delta: Float) {
 
         update(delta)
+
+        updateCamera()
 
         turtle.updatePlayer()
 
@@ -124,7 +157,7 @@ class MainMenu (
         movingPlayerKotlin.getBatch.setProjectionMatrix(camera.combined)
 
         movingPlayerKotlin.getBatch.begin()
-        movingPlayerKotlin.getBatch.draw(turtle, turtle.x, turtle.y, 200f, 200f)
+        movingPlayerKotlin.getBatch.draw(turtle, turtle.x, turtle.y, turtle.width, turtle.height)
         movingPlayerKotlin.getBatch.end()
 
         debugRenderer.render(world, camera.combined)

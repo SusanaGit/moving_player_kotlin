@@ -1,10 +1,11 @@
 package Player
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.BodyDef
-import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
@@ -20,13 +21,13 @@ class Player(
     lateinit var body: Body
 
     init {
-        setSize(100f, 100f)
+        setSize(20f, 20f)
         setPosition(x - width / 2, y - height / 2)
         createBody(world)
     }
 
     fun createBody(world: World) {
-        val bodyDef: BodyDef = BodyDef()
+        val bodyDef = BodyDef()
         bodyDef.type = BodyDef.BodyType.DynamicBody
 
         bodyDef.position.set(
@@ -36,17 +37,17 @@ class Player(
 
         body = world.createBody(bodyDef)
 
-        val shape: PolygonShape = PolygonShape()
+        val shape = PolygonShape()
         shape.setAsBox(
             (width / 2f)/GameInfo.PPM,
             (height / 2f)/GameInfo.PPM)
 
-        val fixtureDef: FixtureDef = FixtureDef()
+        val fixtureDef = FixtureDef()
         fixtureDef.shape = shape
         fixtureDef.density = 40f
         fixtureDef.friction = 40f
 
-        val fixture: Fixture = body.createFixture(fixtureDef)
+        body.createFixture(fixtureDef)
 
         shape.dispose()
     }
