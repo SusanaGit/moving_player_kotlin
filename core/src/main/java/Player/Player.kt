@@ -19,13 +19,17 @@ class Player( world: World, name: String, x: Float, y: Float
         this.world = world;
         setSize(200f, 200f)
         setPosition(x - width / 2, y - height / 2)
+        createBody()
     }
 
     fun createBody() {
         val bodyDef: BodyDef = BodyDef()
         bodyDef.type = BodyDef.BodyType.DynamicBody
 
-        bodyDef.position.set(x, y)
+        bodyDef.position.set(
+            x + width / 2,
+            y + height / 2
+        )
 
         body = world.createBody(bodyDef)
 
@@ -42,6 +46,8 @@ class Player( world: World, name: String, x: Float, y: Float
     }
 
     fun updatePlayer() {
-        this.setPosition(body.position.x, body.position.y)
+        this.setPosition(
+            body.position.x - width / 2,
+            body.position.y - height / 2)
     }
 }

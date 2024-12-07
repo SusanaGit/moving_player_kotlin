@@ -37,6 +37,7 @@ class MainMenu (
         mapRenderer = OrthogonalTiledMapRenderer(tiledMap)
 
         camera = OrthographicCamera().apply {
+            setToOrtho(false, GameInfo.WIDTH.toFloat(), GameInfo.HEIGHT.toFloat())
             position.set(GameInfo.WIDTH / 2f, GameInfo.HEIGHT / 2f, 0f)
             update()
         }
@@ -48,7 +49,6 @@ class MainMenu (
         )
 
         turtle = Player(world, "turtle.png", GameInfo.WIDTH.toFloat() / 2, GameInfo.HEIGHT.toFloat() / 2)
-        turtle.createBody()
 
         bodiesMap = BodiesMap()
         bodiesMap.createStaticBodiesFromMap(tiledMap, world)
