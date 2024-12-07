@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.ScreenUtils
 import com.badlogic.gdx.utils.viewport.StretchViewport
@@ -27,6 +28,7 @@ class MainMenu (
     private var turtle: Player
     private var world: World
     private val bodiesMap: BodiesMap
+    private val debugRenderer: Box2DDebugRenderer
 
     init {
         world = World(Vector2(0f, -9f), true)
@@ -50,6 +52,8 @@ class MainMenu (
 
         bodiesMap = BodiesMap()
         bodiesMap.createStaticBodiesFromMap(tiledMap, world)
+
+        debugRenderer = Box2DDebugRenderer()
     }
 
     override fun show() {
@@ -72,6 +76,8 @@ class MainMenu (
         movingPlayerKotlin.getBatch.begin()
         movingPlayerKotlin.getBatch.draw(turtle, turtle.x, turtle.y, 200f, 200f)
         movingPlayerKotlin.getBatch.end()
+
+        debugRenderer.render(world, camera.combined)
 
         world.step(Gdx.graphics.getDeltaTime(), 6, 2)
     }

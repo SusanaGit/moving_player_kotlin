@@ -19,12 +19,12 @@ class BodiesMap {
         val collisionLayer = map.layers[nameCollisionLayer]
 
         if (collisionLayer == null) {
-            Gdx.app.log("!!!!!", "LAYER NOT FOUNDED :(");
+            Gdx.app.log("!!!!!", "LAYER NOT FOUND :(");
             return;
         }
 
         for (mapObject in collisionLayer.objects) {
-            Gdx.app.log("GOOD!!!!!", "LAYER FOUNDED :)");
+            Gdx.app.log("GOOD!!!!!", "LAYER FOUND :)");
 
             createStaticBody(mapObject, world);
         }
