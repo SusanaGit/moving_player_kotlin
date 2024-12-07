@@ -3,6 +3,7 @@ package scenes
 import Player.Player
 import bodiesmap.BodiesMap
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.maps.tiled.TiledMap
@@ -31,7 +32,7 @@ class MainMenu (
     private val debugRenderer: Box2DDebugRenderer
 
     init {
-        world = World(Vector2(0f, -9f), true)
+        world = World(Vector2(0f, -9.8f), true)
         mapLoader = TmxMapLoader();
         tiledMap = mapLoader.load("mapa.tmx")
         mapRenderer = OrthogonalTiledMapRenderer(tiledMap)
@@ -56,11 +57,60 @@ class MainMenu (
         debugRenderer = Box2DDebugRenderer()
     }
 
+    fun update(dt: Float) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            turtle.body.applyLinearImpulse(
+                Vector2(-20f, 0f), turtle.body.worldCenter, true
+            )
+        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            turtle.body.applyLinearImpulse(
+                Vector2(20f, 0f), turtle.body.worldCenter, true
+            )
+        } else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            turtle.body.applyLinearImpulse(
+                Vector2(0f, 20f), turtle.body.worldCenter, true
+            )
+        }  else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            turtle.body.applyLinearImpulse(
+                Vector2(0f, -20f), turtle.body.worldCenter, true
+            )
+        }
+
+        if (Gdx.input.isTouched) {
+            val valueTouchX = Gdx.input.x.toFloat()
+            val valueTouchY = Gdx.input.y.toFloat()
+            val screenWidth = Gdx.graphics.width.toFloat()
+            val screenHeight = Gdx.graphics.height.toFloat()
+
+            if (valueTouchX < screenWidth / 2) {
+                turtle.body.applyLinearImpulse(
+                    Vector2(-20f, 0f), turtle.body.worldCenter, true
+                )
+            } else {
+                turtle.body.applyLinearImpulse(
+                    Vector2(+20f, 0f), turtle.body.worldCenter, true
+                )
+            }
+
+            if (valueTouchY > screenHeight / 2) {
+                turtle.body.applyLinearImpulse(
+                    Vector2(0f, -20f), turtle.body.worldCenter, true
+                )
+            } else {
+                turtle.body.applyLinearImpulse(
+                    Vector2(0f, +20f), turtle.body.worldCenter, true
+                )
+            }
+        }
+    }
+
     override fun show() {
 
     }
 
     override fun render(delta: Float) {
+
+        update(delta)
 
         turtle.updatePlayer()
 

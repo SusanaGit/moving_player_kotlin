@@ -8,37 +8,43 @@ import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
+import helpers.GameInfo
 
-class Player( world: World, name: String, x: Float, y: Float
+class Player(
+    world: World,
+    name: String,
+    x: Float,
+    y: Float
 ) : Sprite(Texture(name)) {
 
-    private val world: World
-    private lateinit var body: Body
+    lateinit var body: Body
 
     init {
-        this.world = world;
-        setSize(200f, 200f)
+        setSize(100f, 100f)
         setPosition(x - width / 2, y - height / 2)
-        createBody()
+        createBody(world)
     }
 
-    fun createBody() {
+    fun createBody(world: World) {
         val bodyDef: BodyDef = BodyDef()
         bodyDef.type = BodyDef.BodyType.DynamicBody
 
         bodyDef.position.set(
-            x + width / 2,
-            y + height / 2
+            (x + width / 2)/GameInfo.PPM,
+            (y + height / 2)/GameInfo.PPM
         )
 
         body = world.createBody(bodyDef)
 
         val shape: PolygonShape = PolygonShape()
-        shape.setAsBox(width / 2, height / 2)
+        shape.setAsBox(
+            (width / 2f)/GameInfo.PPM,
+            (height / 2f)/GameInfo.PPM)
 
         val fixtureDef: FixtureDef = FixtureDef()
         fixtureDef.shape = shape
-        fixtureDef.density = 1f
+        fixtureDef.density = 40f
+        fixtureDef.friction = 40f
 
         val fixture: Fixture = body.createFixture(fixtureDef)
 
@@ -47,7 +53,8 @@ class Player( world: World, name: String, x: Float, y: Float
 
     fun updatePlayer() {
         this.setPosition(
-            body.position.x - width / 2,
-            body.position.y - height / 2)
+            (body.position.x * GameInfo.PPM) - width / 2,
+            (body.position.y * GameInfo.PPM) - height / 2)
     }
+
 }

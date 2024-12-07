@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
+import helpers.GameInfo
 
 class BodiesMap {
 
@@ -38,21 +39,21 @@ class BodiesMap {
             val bodyDef = BodyDef();
             bodyDef.type = BodyDef.BodyType.StaticBody;
             bodyDef.position.set(
-                (rectObject.x + rectObject.width / 2),
-                (rectObject.y + rectObject.height / 2)
+                (rectObject.x + rectObject.width / 2)/GameInfo.PPM,
+                (rectObject.y + rectObject.height / 2)/GameInfo.PPM
             )
 
             val mapBody = world.createBody(bodyDef);
 
             val shape = PolygonShape()
             shape.setAsBox(
-                rectObject.width / 2,
-                rectObject.height / 2
+                (rectObject.width / 2)/GameInfo.PPM,
+                rectObject.height / 2/GameInfo.PPM
             );
 
             val fixtureDef = FixtureDef().apply {
                 this.shape = shape
-                this.density = 1f
+                this.density = 20f
             }
 
             mapBody.createFixture(fixtureDef);

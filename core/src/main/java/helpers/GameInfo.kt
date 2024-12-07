@@ -7,6 +7,7 @@ class GameInfo {
     companion object {
         const val WIDTH = 960
         const val HEIGHT = 640
+        const val PPM = 100
     }
 
 }
