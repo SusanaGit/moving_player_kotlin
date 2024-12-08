@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport
 import com.sun.jdi.IntegerValue
 import com.susanafigueroa.MovingPlayerKotlin
 import com.susanafigueroa.helpers.GameInfo
+import com.susanafigueroa.villains.Villain
 
 class MainMenu (
     private var movingPlayerKotlin: MovingPlayerKotlin,
@@ -30,6 +31,7 @@ class MainMenu (
     private var turtle: Player
     private var world: World
     private val bodiesMap: BodiesMap
+    private var villains: Villain
     private val debugRenderer: Box2DDebugRenderer
 
     init {
@@ -54,6 +56,9 @@ class MainMenu (
 
         bodiesMap = BodiesMap()
         bodiesMap.createStaticBodiesFromMap(tiledMap, world)
+
+        villains = Villain()
+        villains.createDynamicVillainsBodiesFromMap(tiledMap, world)
 
         debugRenderer = Box2DDebugRenderer()
     }

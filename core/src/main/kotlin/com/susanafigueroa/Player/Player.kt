@@ -21,7 +21,7 @@ class Player(
     lateinit var body: Body
 
     init {
-        setSize(20f, 20f)
+        setSize(40f, 40f)
         setPosition(x - width / 2, y - height / 2)
         createBody(world)
     }
@@ -44,7 +44,7 @@ class Player(
 
         val fixtureDef = FixtureDef()
         fixtureDef.shape = shape
-        fixtureDef.density = 40f
+        fixtureDef.density = 80f
         fixtureDef.friction = 40f
 
         body.createFixture(fixtureDef)
