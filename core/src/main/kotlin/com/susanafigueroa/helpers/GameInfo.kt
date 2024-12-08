@@ -1,4 +1,4 @@
-package helpers
+package com.susanafigueroa.helpers
 
 // contains some information about the game
 class GameInfo {

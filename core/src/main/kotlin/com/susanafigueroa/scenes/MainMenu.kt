@@ -1,7 +1,7 @@
-package scenes
+package com.susanafigueroa.scenes
 
-import Player.Player
-import bodiesmap.BodiesMap
+import com.susanafigueroa.Player.Player
+import com.susanafigueroa.bodiesmap.BodiesMap
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.Screen
@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.ScreenUtils
 import com.badlogic.gdx.utils.viewport.StretchViewport
 import com.sun.jdi.IntegerValue
 import com.susanafigueroa.MovingPlayerKotlin
-import helpers.GameInfo
+import com.susanafigueroa.helpers.GameInfo
 
 class MainMenu (
     private var movingPlayerKotlin: MovingPlayerKotlin,

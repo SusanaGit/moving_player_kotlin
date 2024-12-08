@@ -1,4 +1,4 @@
-package Player
+package com.susanafigueroa.Player
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
-import helpers.GameInfo
+import com.susanafigueroa.helpers.GameInfo
 
 class Player(
     world: World,
@@ -31,16 +31,16 @@ class Player(
         bodyDef.type = BodyDef.BodyType.DynamicBody
 
         bodyDef.position.set(
-            (x + width / 2)/GameInfo.PPM,
-            (y + height / 2)/GameInfo.PPM
+            (x + width / 2)/ GameInfo.PPM,
+            (y + height / 2)/ GameInfo.PPM
         )
 
         body = world.createBody(bodyDef)
 
         val shape = PolygonShape()
         shape.setAsBox(
-            (width / 2f)/GameInfo.PPM,
-            (height / 2f)/GameInfo.PPM)
+            (width / 2f)/ GameInfo.PPM,
+            (height / 2f)/ GameInfo.PPM)
 
         val fixtureDef = FixtureDef()
         fixtureDef.shape = shape

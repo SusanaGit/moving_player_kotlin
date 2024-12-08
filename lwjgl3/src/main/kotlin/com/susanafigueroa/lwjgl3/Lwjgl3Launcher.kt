@@ -5,7 +5,7 @@ package com.susanafigueroa.lwjgl3
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 import com.susanafigueroa.MovingPlayerKotlin
-import helpers.GameInfo
+import com.susanafigueroa.helpers.GameInfo
 
 /** Launches the desktop (LWJGL3) application. */
 fun main() {
