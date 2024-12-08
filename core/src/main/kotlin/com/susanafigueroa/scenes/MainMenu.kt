@@ -1,5 +1,6 @@
 package com.susanafigueroa.scenes
 
+import com.badlogic.gdx.Game
 import com.susanafigueroa.Player.Player
 import com.susanafigueroa.bodiesmap.BodiesMap
 import com.badlogic.gdx.Gdx
@@ -18,38 +19,52 @@ import com.sun.jdi.IntegerValue
 import com.susanafigueroa.MovingPlayerKotlin
 import com.susanafigueroa.helpers.GameInfo
 import com.susanafigueroa.villains.Villain
+import com.susanafigueroa.villains.VillainManage
 
 class MainMenu (
     private var movingPlayerKotlin: MovingPlayerKotlin,
 ) : Screen {
 
-    private val camera: OrthographicCamera
+    private val mapCamera: OrthographicCamera
+    private val box2DCamera: OrthographicCamera
     private val viewport: StretchViewport
     private val mapLoader: TmxMapLoader
     private var tiledMap: TiledMap
     private var mapRenderer: OrthogonalTiledMapRenderer
     private var turtle: Player
-    private var world: World
+    private var world: World = World(Vector2(0f, -9.8f), true)
     private val bodiesMap: BodiesMap
-    private var villains: Villain
+    private var villainManage: VillainManage
     private val debugRenderer: Box2DDebugRenderer
 
     init {
-        world = World(Vector2(0f, -9.8f), true)
         mapLoader = TmxMapLoader();
         tiledMap = mapLoader.load("mapa.tmx")
         mapRenderer = OrthogonalTiledMapRenderer(tiledMap)
 
-        camera = OrthographicCamera().apply {
+        // camera for the map -> TiledMap -> pixels
+        mapCamera = OrthographicCamera().apply {
             setToOrtho(false, GameInfo.WIDTH.toFloat(), GameInfo.HEIGHT.toFloat())
-            position.set(GameInfo.WIDTH / 2f, GameInfo.HEIGHT / 2f, 0f)
+            position.set(
+                GameInfo.WIDTH / 2f,
+                GameInfo.HEIGHT / 2f,
+                0f)
+            update()
+        }
+
+        // camera for the Box2D -> ppm
+        box2DCamera = OrthographicCamera().apply {
+            setToOrtho(false, (GameInfo.WIDTH/GameInfo.PPM).toFloat(), (GameInfo.HEIGHT/GameInfo.PPM).toFloat())
+            position.set((
+                GameInfo.WIDTH/2f)/GameInfo.PPM,
+                (GameInfo.HEIGHT/2f)/GameInfo.PPM,0f)
             update()
         }
 
         viewport = StretchViewport(
             GameInfo.WIDTH.toFloat(),
             GameInfo.HEIGHT.toFloat(),
-            camera
+            mapCamera
         )
 
         turtle = Player(world, "turtle.png", GameInfo.WIDTH.toFloat() / 2, GameInfo.HEIGHT.toFloat() / 2)
@@ -57,8 +72,8 @@ class MainMenu (
         bodiesMap = BodiesMap()
         bodiesMap.createStaticBodiesFromMap(tiledMap, world)
 
-        villains = Villain()
-        villains.createDynamicVillainsBodiesFromMap(tiledMap, world)
+        villainManage = VillainManage()
+        villainManage.createStaticSpriteVillains(tiledMap, world)
 
         debugRenderer = Box2DDebugRenderer()
     }
@@ -119,29 +134,28 @@ class MainMenu (
 
         val mapWidthTiles = tiledMap.properties.get("width", Int::class.java)
         val mapHeightTiles = tiledMap.properties.get("height", Int::class.java)
-        Gdx.app.log("TILES MAP WIDTH", mapWidthTiles.toString()) // 300
-        Gdx.app.log("TILES MAP HEIGHT", mapHeightTiles.toString()) // 40
 
         val mapWidthPixels = mapWidthTiles * 32f
         val mapHeightPixels = mapHeightTiles * 32f
-        Gdx.app.log("PIXELS MAP WIDTH", mapWidthPixels.toString()) // 300 * 32 = 9600
-        Gdx.app.log("PIXELS MAP HEIGHT", mapHeightPixels.toString()) // 40 * 32 = 1280
 
-        val cameraWidth = camera.viewportWidth
-        val cameraHeight = camera.viewportHeight
-        Gdx.app.log("CAMERA WIDTH", cameraWidth.toString()) // 960
-        Gdx.app.log("CAMERA HEIGHT", cameraHeight.toString()) // 640
+        val cameraWidth = mapCamera.viewportWidth
+        val cameraHeight = mapCamera.viewportHeight
 
         val cameraX = (cameraWidth / 2).coerceAtLeast(
             (positionPlayerTurtle.x * GameInfo.PPM).coerceAtMost(mapWidthPixels - cameraWidth / 2)
-        );
+        )
+
         val cameraY = (cameraHeight / 2).coerceAtLeast(
             (positionPlayerTurtle.y * GameInfo.PPM).coerceAtMost(mapHeightPixels - cameraHeight / 2)
-        );
+        )
 
-        camera.position.set(cameraX, cameraY, 0f)
+        // pixels cam TiledMap
+        mapCamera.position.set(cameraX, cameraY, 0f)
+        mapCamera.update()
 
-        camera.update()
+        // ppm cam BoxD2
+        box2DCamera.position.set(cameraX/GameInfo.PPM, cameraY/GameInfo.PPM, 0f)
+        box2DCamera.update()
     }
 
     override fun render(delta: Float) {
@@ -154,20 +168,22 @@ class MainMenu (
 
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f)
 
-        camera.update()
-
-        mapRenderer.setView(camera)
+        mapRenderer.setView(mapCamera)
         mapRenderer.render()
 
-        movingPlayerKotlin.getBatch.setProjectionMatrix(camera.combined)
+        debugRenderer.render(world, box2DCamera.combined)
+
+        movingPlayerKotlin.getBatch.setProjectionMatrix(mapCamera.combined)
 
         movingPlayerKotlin.getBatch.begin()
         movingPlayerKotlin.getBatch.draw(turtle, turtle.x, turtle.y, turtle.width, turtle.height)
+
+        for (villain in villainManage.getListVillains()) {
+            movingPlayerKotlin.getBatch.draw(villain, villain.x, villain.y, villain.width, villain.height)
+        }
         movingPlayerKotlin.getBatch.end()
 
-        debugRenderer.render(world, camera.combined)
-
-        world.step(Gdx.graphics.getDeltaTime(), 6, 2)
+        world.step(Gdx.graphics.deltaTime, 6, 2)
     }
 
     override fun resize(width: Int, height: Int) {
@@ -190,6 +206,7 @@ class MainMenu (
         movingPlayerKotlin.getBatch.dispose()
         tiledMap.dispose()
         turtle.texture.dispose()
+        debugRenderer.dispose()
     }
 
 }
