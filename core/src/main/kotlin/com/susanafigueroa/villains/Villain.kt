@@ -13,7 +13,7 @@ class Villain (
     y: Float
 ) : Sprite(Texture(nameTexturePath)) {
 
-    var body: Body? = null
+    lateinit var body: Body
 
     init {
         // ppm to pixels
@@ -26,5 +26,11 @@ class Villain (
 
     fun addBody(villainBody: Body) {
         body = villainBody
+    }
+
+    fun updateVillainPositionBody() {
+        this.setPosition(
+            (body.position.x * GameInfo.PPM) - width / 2,
+            (body.position.y * GameInfo.PPM) - height / 2)
     }
 }

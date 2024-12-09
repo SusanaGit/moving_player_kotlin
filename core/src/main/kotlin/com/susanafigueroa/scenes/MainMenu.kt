@@ -128,6 +128,7 @@ class MainMenu (
         cuteGirl.drawPlayerAnimation(movingPlayerKotlin.getBatch)
         for (villain in villainManage.getListVillains()) {
             movingPlayerKotlin.getBatch.draw(villain, villain.x, villain.y, villain.width, villain.height)
+            villain.updateVillainPositionBody()
         }
         movingPlayerKotlin.getBatch.end()
 

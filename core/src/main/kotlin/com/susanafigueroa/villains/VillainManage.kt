@@ -49,7 +49,7 @@ class VillainManage {
             Gdx.app.log("GOOD!!!!!", "INSTANCEOF RectangleMapObject, im so happy")
             val rectVillain = villainObject.rectangle
             val bodyDefVillain = BodyDef().apply {
-                type = BodyDef.BodyType.StaticBody
+                type = BodyDef.BodyType.DynamicBody
                 position.set(
                     (rectVillain.x + rectVillain.width / 2) / GameInfo.PPM,
                     (rectVillain.y + rectVillain.height / 2) / GameInfo.PPM
