@@ -1,10 +1,6 @@
 package com.susanafigueroa.scenes
 
-import com.badlogic.gdx.Game
-import com.susanafigueroa.Player.Player
-import com.susanafigueroa.bodiesmap.BodiesMap
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.maps.tiled.TiledMap
@@ -15,10 +11,10 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.ScreenUtils
 import com.badlogic.gdx.utils.viewport.StretchViewport
-import com.sun.jdi.IntegerValue
 import com.susanafigueroa.MovingPlayerKotlin
+import com.susanafigueroa.Player.Player
+import com.susanafigueroa.bodiesmap.BodiesMap
 import com.susanafigueroa.helpers.GameInfo
-import com.susanafigueroa.villains.Villain
 import com.susanafigueroa.villains.VillainManage
 
 class MainMenu (
@@ -39,7 +35,7 @@ class MainMenu (
 
     init {
         mapLoader = TmxMapLoader();
-        tiledMap = mapLoader.load("mapa.tmx")
+        tiledMap = mapLoader.load("map/mapa.tmx")
         mapRenderer = OrthogonalTiledMapRenderer(tiledMap)
 
         // camera for the map -> TiledMap -> pixels
@@ -67,7 +63,7 @@ class MainMenu (
             mapCamera
         )
 
-        turtle = Player(world, "turtle.png", GameInfo.WIDTH.toFloat() / 2, GameInfo.HEIGHT.toFloat() / 2)
+        turtle = Player(world, "player/player.png", GameInfo.WIDTH.toFloat() / 2, GameInfo.HEIGHT.toFloat() / 2)
 
         bodiesMap = BodiesMap()
         bodiesMap.createStaticBodiesFromMap(tiledMap, world)
@@ -76,53 +72,6 @@ class MainMenu (
         villainManage.createStaticSpriteVillains(tiledMap, world)
 
         debugRenderer = Box2DDebugRenderer()
-    }
-
-    fun update(dt: Float) {
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            turtle.body.applyLinearImpulse(
-                Vector2(-20f, 0f), turtle.body.worldCenter, true
-            )
-        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            turtle.body.applyLinearImpulse(
-                Vector2(20f, 0f), turtle.body.worldCenter, true
-            )
-        } else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            turtle.body.applyLinearImpulse(
-                Vector2(0f, 20f), turtle.body.worldCenter, true
-            )
-        }  else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            turtle.body.applyLinearImpulse(
-                Vector2(0f, -20f), turtle.body.worldCenter, true
-            )
-        }
-
-        if (Gdx.input.isTouched) {
-            val valueTouchX = Gdx.input.x.toFloat()
-            val valueTouchY = Gdx.input.y.toFloat()
-            val screenWidth = Gdx.graphics.width.toFloat()
-            val screenHeight = Gdx.graphics.height.toFloat()
-
-            if (valueTouchX < screenWidth / 2) {
-                turtle.body.applyLinearImpulse(
-                    Vector2(-20f, 0f), turtle.body.worldCenter, true
-                )
-            } else {
-                turtle.body.applyLinearImpulse(
-                    Vector2(+20f, 0f), turtle.body.worldCenter, true
-                )
-            }
-
-            if (valueTouchY > screenHeight / 2) {
-                turtle.body.applyLinearImpulse(
-                    Vector2(0f, -20f), turtle.body.worldCenter, true
-                )
-            } else {
-                turtle.body.applyLinearImpulse(
-                    Vector2(0f, +20f), turtle.body.worldCenter, true
-                )
-            }
-        }
     }
 
     override fun show() {
@@ -160,11 +109,11 @@ class MainMenu (
 
     override fun render(delta: Float) {
 
-        update(delta)
+        turtle.handleInput()
 
         updateCamera()
 
-        turtle.updatePlayer()
+        turtle.updatePlayer(delta)
 
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f)
 
@@ -176,8 +125,7 @@ class MainMenu (
         movingPlayerKotlin.getBatch.setProjectionMatrix(mapCamera.combined)
 
         movingPlayerKotlin.getBatch.begin()
-        movingPlayerKotlin.getBatch.draw(turtle, turtle.x, turtle.y, turtle.width, turtle.height)
-
+        turtle.drawPlayerAnimation(movingPlayerKotlin.getBatch)
         for (villain in villainManage.getListVillains()) {
             movingPlayerKotlin.getBatch.draw(villain, villain.x, villain.y, villain.width, villain.height)
         }
@@ -208,5 +156,4 @@ class MainMenu (
         turtle.texture.dispose()
         debugRenderer.dispose()
     }
-
 }

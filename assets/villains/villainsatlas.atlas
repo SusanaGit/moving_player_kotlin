@@ -1,0 +1,61 @@
+villains.png
+size: 1889, 1830
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Dead (1)
+  rotate: false
+  xy: 0, 0
+  size: 684, 627
+  orig: 684, 627
+  offset: 0, 0
+  index: -1
+Dead (3)
+  rotate: false
+  xy: 684, 0
+  size: 684, 627
+  orig: 684, 627
+  offset: 0, 0
+  index: -1
+Dead (5)
+  rotate: false
+  xy: 0, 627
+  size: 684, 627
+  orig: 684, 627
+  offset: 0, 0
+  index: -1
+Dead (9)
+  rotate: false
+  xy: 684, 627
+  size: 684, 627
+  orig: 684, 627
+  offset: 0, 0
+  index: -1
+Walk (1)
+  rotate: false
+  xy: 1368, 627
+  size: 521, 576
+  orig: 521, 576
+  offset: 0, 0
+  index: -1
+Walk (3)
+  rotate: false
+  xy: 0, 1254
+  size: 521, 576
+  orig: 521, 576
+  offset: 0, 0
+  index: -1
+Walk (6)
+  rotate: false
+  xy: 521, 1254
+  size: 521, 576
+  orig: 521, 576
+  offset: 0, 0
+  index: -1
+Walk (7)
+  rotate: false
+  xy: 1042, 1254
+  size: 521, 576
+  orig: 521, 576
+  offset: 0, 0
+  index: -1

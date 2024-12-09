@@ -34,7 +34,7 @@ class VillainManage {
             if (newVillainBody != null) {
                 val newVillain = Villain(
                     world,
-                    "villains/Idle (1).png",
+                    "villains/villain.png",
                     newVillainBody.position.x,
                     newVillainBody.position.y
                 )
