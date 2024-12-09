@@ -79,7 +79,7 @@ class MainMenu (
     }
 
     private fun updateCamera() {
-        val positionPlayerTurtle = cuteGirl.body.position // 4.8ppm x | 3.2ppm y
+        val positionPlayerCuteGirl = cuteGirl.body.position // 4.8ppm x | 3.2ppm y
 
         val mapWidthTiles = tiledMap.properties.get("width", Int::class.java)
         val mapHeightTiles = tiledMap.properties.get("height", Int::class.java)
@@ -91,11 +91,11 @@ class MainMenu (
         val cameraHeight = mapCamera.viewportHeight
 
         val cameraX = (cameraWidth / 2).coerceAtLeast(
-            (positionPlayerTurtle.x * GameInfo.PPM).coerceAtMost(mapWidthPixels - cameraWidth / 2)
+            (positionPlayerCuteGirl.x * GameInfo.PPM).coerceAtMost(mapWidthPixels - cameraWidth / 2)
         )
 
         val cameraY = (cameraHeight / 2).coerceAtLeast(
-            (positionPlayerTurtle.y * GameInfo.PPM).coerceAtMost(mapHeightPixels - cameraHeight / 2)
+            (positionPlayerCuteGirl.y * GameInfo.PPM).coerceAtMost(mapHeightPixels - cameraHeight / 2)
         )
 
         // pixels cam TiledMap
@@ -127,8 +127,8 @@ class MainMenu (
         movingPlayerKotlin.getBatch.begin()
         cuteGirl.drawPlayerAnimation(movingPlayerKotlin.getBatch)
         for (villain in villainManage.getListVillains()) {
-            movingPlayerKotlin.getBatch.draw(villain, villain.x, villain.y, villain.width, villain.height)
-            villain.updateVillainPositionBody()
+            villain.villainIsWalking(delta)
+            villain.drawVillainAnimation(movingPlayerKotlin.getBatch)
         }
         movingPlayerKotlin.getBatch.end()
 
