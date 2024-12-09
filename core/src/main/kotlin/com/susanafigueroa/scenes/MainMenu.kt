@@ -25,12 +25,12 @@ class MainMenu (
     private val box2DCamera: OrthographicCamera
     private val viewport: StretchViewport
     private val mapLoader: TmxMapLoader
-    private var tiledMap: TiledMap
-    private var mapRenderer: OrthogonalTiledMapRenderer
-    private var turtle: Player
-    private var world: World = World(Vector2(0f, -9.8f), true)
+    private val tiledMap: TiledMap
+    private val mapRenderer: OrthogonalTiledMapRenderer
+    private val cuteGirl: Player
+    private val world: World = World(Vector2(0f, -9.8f), true)
     private val bodiesMap: BodiesMap
-    private var villainManage: VillainManage
+    private val villainManage: VillainManage
     private val debugRenderer: Box2DDebugRenderer
 
     init {
@@ -63,7 +63,7 @@ class MainMenu (
             mapCamera
         )
 
-        turtle = Player(world, "player/player.png", GameInfo.WIDTH.toFloat() / 2, GameInfo.HEIGHT.toFloat() / 2)
+        cuteGirl = Player(world, "player/player.png", GameInfo.WIDTH.toFloat() / 2, GameInfo.HEIGHT.toFloat() / 2)
 
         bodiesMap = BodiesMap()
         bodiesMap.createStaticBodiesFromMap(tiledMap, world)
@@ -79,7 +79,7 @@ class MainMenu (
     }
 
     private fun updateCamera() {
-        val positionPlayerTurtle = turtle.body.position // 4.8ppm x | 3.2ppm y
+        val positionPlayerTurtle = cuteGirl.body.position // 4.8ppm x | 3.2ppm y
 
         val mapWidthTiles = tiledMap.properties.get("width", Int::class.java)
         val mapHeightTiles = tiledMap.properties.get("height", Int::class.java)
@@ -109,11 +109,11 @@ class MainMenu (
 
     override fun render(delta: Float) {
 
-        turtle.handleInput()
+        cuteGirl.handleInput()
 
         updateCamera()
 
-        turtle.updatePlayer(delta)
+        cuteGirl.updatePlayer(delta)
 
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f)
 
@@ -125,7 +125,7 @@ class MainMenu (
         movingPlayerKotlin.getBatch.setProjectionMatrix(mapCamera.combined)
 
         movingPlayerKotlin.getBatch.begin()
-        turtle.drawPlayerAnimation(movingPlayerKotlin.getBatch)
+        cuteGirl.drawPlayerAnimation(movingPlayerKotlin.getBatch)
         for (villain in villainManage.getListVillains()) {
             movingPlayerKotlin.getBatch.draw(villain, villain.x, villain.y, villain.width, villain.height)
         }
@@ -153,7 +153,7 @@ class MainMenu (
     override fun dispose() {
         movingPlayerKotlin.getBatch.dispose()
         tiledMap.dispose()
-        turtle.texture.dispose()
+        cuteGirl.texture.dispose()
         debugRenderer.dispose()
     }
 }
