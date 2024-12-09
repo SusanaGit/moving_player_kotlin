@@ -3,6 +3,7 @@ package com.susanafigueroa.scenes
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
@@ -15,6 +16,7 @@ import com.susanafigueroa.MovingPlayerKotlin
 import com.susanafigueroa.Player.Player
 import com.susanafigueroa.bodiesmap.BodiesMap
 import com.susanafigueroa.helpers.GameInfo
+import com.susanafigueroa.timer.Timer
 import com.susanafigueroa.villains.VillainManage
 
 class MainMenu (
@@ -23,6 +25,7 @@ class MainMenu (
 
     private val mapCamera: OrthographicCamera
     private val box2DCamera: OrthographicCamera
+    private val hudCamera: OrthographicCamera
     private val viewport: StretchViewport
     private val mapLoader: TmxMapLoader
     private val tiledMap: TiledMap
@@ -32,6 +35,7 @@ class MainMenu (
     private val bodiesMap: BodiesMap
     private val villainManage: VillainManage
     private val debugRenderer: Box2DDebugRenderer
+    private lateinit var timer: Timer
 
     init {
         mapLoader = TmxMapLoader();
@@ -57,11 +61,18 @@ class MainMenu (
             update()
         }
 
+        // camera for HUD -> pixels
+        hudCamera = OrthographicCamera()
+        hudCamera.setToOrtho(false, GameInfo.WIDTH.toFloat(), GameInfo.HEIGHT.toFloat())
+        hudCamera.update()
+
         viewport = StretchViewport(
             GameInfo.WIDTH.toFloat(),
             GameInfo.HEIGHT.toFloat(),
             mapCamera
         )
+
+        timer = Timer(BitmapFont(), 120f)
 
         cuteGirl = Player(world, "player/player.png", GameInfo.WIDTH.toFloat() / 2, GameInfo.HEIGHT.toFloat() / 2)
 
@@ -130,6 +141,12 @@ class MainMenu (
             villain.villainIsWalking(delta)
             villain.drawVillainAnimation(movingPlayerKotlin.getBatch)
         }
+        movingPlayerKotlin.getBatch.end()
+
+        // HUD
+        movingPlayerKotlin.getBatch.setProjectionMatrix(hudCamera.combined);
+        movingPlayerKotlin.getBatch.begin()
+        timer.runTimer(movingPlayerKotlin.getBatch)
         movingPlayerKotlin.getBatch.end()
 
         world.step(Gdx.graphics.deltaTime, 6, 2)
