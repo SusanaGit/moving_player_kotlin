@@ -17,6 +17,8 @@ import com.susanafigueroa.Player.Player
 import com.susanafigueroa.bodiesmap.BodiesMap
 import com.susanafigueroa.contactplayervillain.ContactPlayerVillain
 import com.susanafigueroa.helpers.GameInfo
+import com.susanafigueroa.magicalobjects.chandelier.ChandelierManage
+import com.susanafigueroa.magicalobjects.chest.ChestManage
 import com.susanafigueroa.timer.Timer
 import com.susanafigueroa.villains.VillainManage
 
@@ -35,6 +37,8 @@ class MainMenu (
     private val world: World = World(Vector2(0f, -9.8f), true)
     private val bodiesMap: BodiesMap
     private val villainManage: VillainManage
+    private val chestManage: ChestManage
+    private val chandelierManage: ChandelierManage
     private val debugRenderer: Box2DDebugRenderer
     private var timer: Timer
     private var contactPlayerVillain: ContactPlayerVillain
@@ -83,6 +87,12 @@ class MainMenu (
 
         villainManage = VillainManage()
         villainManage.createStaticSpriteVillains(tiledMap, world)
+
+        chestManage = ChestManage()
+        chestManage.createStaticSpriteChests(tiledMap, world)
+
+        chandelierManage = ChandelierManage()
+        chandelierManage.createStaticSpriteChandeliers(tiledMap, world)
 
         contactPlayerVillain = ContactPlayerVillain(timer)
         world.setContactListener(contactPlayerVillain)
@@ -145,6 +155,12 @@ class MainMenu (
         for (villain in villainManage.getListVillains()) {
             villain.villainIsWalking(delta)
             villain.drawVillainAnimation(movingPlayerKotlin.getBatch)
+        }
+        for (chest in chestManage.getListChests()) {
+            chest.drawChest(movingPlayerKotlin.getBatch)
+        }
+        for (chandelier in chandelierManage.getListChandeliers()) {
+            chandelier.drawChandelier(movingPlayerKotlin.getBatch)
         }
         movingPlayerKotlin.getBatch.end()
 
