@@ -13,9 +13,9 @@ import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.ScreenUtils
 import com.badlogic.gdx.utils.viewport.StretchViewport
 import com.susanafigueroa.MovingPlayerKotlin
-import com.susanafigueroa.Player.Player
+import com.susanafigueroa.player.Player
 import com.susanafigueroa.bodiesmap.BodiesMap
-import com.susanafigueroa.contactplayervillain.ContactPlayerVillain
+import com.susanafigueroa.contact.ContactMovingPlayer
 import com.susanafigueroa.helpers.GameInfo
 import com.susanafigueroa.magicalobjects.chandelier.ChandelierManage
 import com.susanafigueroa.magicalobjects.chest.ChestManage
@@ -41,7 +41,7 @@ class MainMenu (
     private val chandelierManage: ChandelierManage
     private val debugRenderer: Box2DDebugRenderer
     private var timer: Timer
-    private var contactPlayerVillain: ContactPlayerVillain
+    private var contactMovingPlayer: ContactMovingPlayer
 
     init {
         mapLoader = TmxMapLoader();
@@ -94,8 +94,8 @@ class MainMenu (
         chandelierManage = ChandelierManage()
         chandelierManage.createStaticSpriteChandeliers(tiledMap, world)
 
-        contactPlayerVillain = ContactPlayerVillain(timer)
-        world.setContactListener(contactPlayerVillain)
+        contactMovingPlayer = ContactMovingPlayer(timer)
+        world.setContactListener(contactMovingPlayer)
 
         debugRenderer = Box2DDebugRenderer()
     }

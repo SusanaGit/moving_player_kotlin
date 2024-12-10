@@ -1,4 +1,4 @@
-package com.susanafigueroa.Player
+package com.susanafigueroa.player
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
