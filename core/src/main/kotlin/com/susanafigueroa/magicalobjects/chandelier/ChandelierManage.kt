@@ -13,6 +13,7 @@ import com.susanafigueroa.helpers.GameInfo
 
 class ChandelierManage {
     private val listChandeliers: MutableList<Chandelier> = ArrayList()
+    private val listChandeliersToRemove: MutableList<Chandelier> = ArrayList()
     private val nameCollisionLayer = "chandeliers_layer"
 
     fun getListChandeliers(): List<Chandelier> {
@@ -31,7 +32,7 @@ class ChandelierManage {
                 newChandelierBody!!.position.x,
                 newChandelierBody.position.y
             )
-            newChandelier.addBody(newChandelierBody)
+            newChandelier.setBody(newChandelierBody)
             listChandeliers.add(newChandelier)
         }
     }
@@ -56,8 +57,7 @@ class ChandelierManage {
             fixtureDef.shape = shape
             fixtureDef.density = 20f
 
-            val chandelierFixture = chandelierBody.createFixture(fixtureDef)
-            chandelierFixture.userData = this
+            chandelierBody.createFixture(fixtureDef)
 
             shape.dispose()
 
@@ -65,5 +65,29 @@ class ChandelierManage {
         } else {
             return null
         }
+    }
+
+    fun removeChandelier(chandelierToRemove: Chandelier?) {
+        if (!listChandeliersToRemove.contains(chandelierToRemove)) {
+            listChandeliersToRemove.add(chandelierToRemove!!)
+        }
+    }
+
+    fun updateListChandeliers() {
+        for (chandelierToRemove in listChandeliersToRemove) {
+            val chandelierTextureToRemove = chandelierToRemove.texture
+            val chandelierBodyToRemove: Body? = chandelierToRemove.getChandelierBody()
+
+            if (chandelierBodyToRemove != null) {
+                chandelierBodyToRemove.world.destroyBody(chandelierBodyToRemove)
+            }
+
+            if (chandelierTextureToRemove != null) {
+                chandelierTextureToRemove.dispose()
+            }
+
+            listChandeliers.remove(chandelierToRemove)
+        }
+        listChandeliersToRemove.clear()
     }
 }

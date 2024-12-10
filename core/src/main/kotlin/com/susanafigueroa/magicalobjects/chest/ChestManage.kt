@@ -13,6 +13,7 @@ import com.susanafigueroa.helpers.GameInfo
 
 class ChestManage {
     private val listChests: MutableList<Chest> = ArrayList()
+    private val listChestsToRemove: MutableList<Chest> = ArrayList()
     private val nameCollisionLayer = "chests_layer"
 
     fun getListChests(): List<Chest> {
@@ -32,7 +33,7 @@ class ChestManage {
                 newChestBody!!.position.x,
                 newChestBody.position.y
             )
-            newChest.addBody(newChestBody)
+            newChest.setBody(newChestBody)
 
             listChests.add(newChest)
         }
@@ -66,8 +67,30 @@ class ChestManage {
         }
     }
 
-    fun removeChest(chestToRemove: Chest) {
-        chestToRemove.chestBody!!.world.destroyBody(chestToRemove.chestBody)
-        listChests.remove(chestToRemove)
+    fun removeChest(chestToRemove: Chest?) {
+        if (!listChestsToRemove.contains(chestToRemove)) {
+            listChestsToRemove.add(chestToRemove!!)
+        }
     }
+
+    fun updateListChests() {
+        for (chestToRemove in listChestsToRemove) {
+            val chestTextureToRemove = chestToRemove.texture
+            val chestBodyToRemove = chestToRemove.getChestBody()
+
+            if (chestBodyToRemove != null) {
+                chestBodyToRemove.world.destroyBody(chestBodyToRemove)
+            }
+
+            if (chestTextureToRemove != null) {
+                chestTextureToRemove.dispose()
+
+            }
+
+            listChests.remove(chestToRemove)
+        }
+
+        listChestsToRemove.clear()
+    }
+
 }

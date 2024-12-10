@@ -22,8 +22,15 @@ class Chandelier(private val world: World, nameTexturePath: String?, x: Float, y
         setPosition(xPixels - width / 2, yPixels - height / 2)
     }
 
-    fun addBody(chandelierBody: Body?) {
+    fun setBody(chandelierBody: Body) {
         this.chandelierBody = chandelierBody
+        for (fixture in chandelierBody.fixtureList) {
+            fixture.userData = this
+        }
+    }
+
+    fun getChandelierBody(): Body? {
+        return this.chandelierBody
     }
 
     fun drawChandelier(batch: SpriteBatch) {

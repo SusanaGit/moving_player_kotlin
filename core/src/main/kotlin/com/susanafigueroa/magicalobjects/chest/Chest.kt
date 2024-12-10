@@ -10,8 +10,8 @@ import com.susanafigueroa.helpers.GameInfo
 
 class Chest(private val world: World, nameTexturePath: String?, x: Float, y: Float) :
     Sprite(Texture(nameTexturePath)) {
-    var chestBody: Body? = null
-        private set
+
+    private var chestBody: Body? = null
 
     init {
         // ppm to pixels
@@ -23,8 +23,15 @@ class Chest(private val world: World, nameTexturePath: String?, x: Float, y: Flo
         setPosition(xPixels - width / 2, yPixels - height / 2)
     }
 
-    fun addBody(chestBody: Body?) {
+    fun setBody(chestBody: Body) {
         this.chestBody = chestBody
+        for (fixture in chestBody.fixtureList) {
+            fixture.userData = this
+        }
+    }
+
+    fun getChestBody(): Body {
+        return chestBody!!
     }
 
     fun drawChest(batch: SpriteBatch) {

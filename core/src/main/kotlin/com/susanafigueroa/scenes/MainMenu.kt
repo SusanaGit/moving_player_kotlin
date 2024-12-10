@@ -94,7 +94,7 @@ class MainMenu (
         chandelierManage = ChandelierManage()
         chandelierManage.createStaticSpriteChandeliers(tiledMap, world)
 
-        contactMovingPlayer = ContactMovingPlayer(timer)
+        contactMovingPlayer = ContactMovingPlayer(timer, chestManage, chandelierManage)
         world.setContactListener(contactMovingPlayer)
 
         debugRenderer = Box2DDebugRenderer()
@@ -138,6 +138,9 @@ class MainMenu (
         cuteGirl.handleInput()
 
         updateCamera()
+
+        chestManage.updateListChests()
+        chandelierManage.updateListChandeliers()
 
         cuteGirl.updatePlayer(delta)
 
