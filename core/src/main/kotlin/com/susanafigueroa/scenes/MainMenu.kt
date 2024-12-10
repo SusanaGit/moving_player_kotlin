@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport
 import com.susanafigueroa.MovingPlayerKotlin
 import com.susanafigueroa.Player.Player
 import com.susanafigueroa.bodiesmap.BodiesMap
+import com.susanafigueroa.contactplayervillain.ContactPlayerVillain
 import com.susanafigueroa.helpers.GameInfo
 import com.susanafigueroa.timer.Timer
 import com.susanafigueroa.villains.VillainManage
@@ -35,7 +36,8 @@ class MainMenu (
     private val bodiesMap: BodiesMap
     private val villainManage: VillainManage
     private val debugRenderer: Box2DDebugRenderer
-    private lateinit var timer: Timer
+    private var timer: Timer
+    private var contactPlayerVillain: ContactPlayerVillain
 
     init {
         mapLoader = TmxMapLoader();
@@ -81,6 +83,9 @@ class MainMenu (
 
         villainManage = VillainManage()
         villainManage.createStaticSpriteVillains(tiledMap, world)
+
+        contactPlayerVillain = ContactPlayerVillain(timer)
+        world.setContactListener(contactPlayerVillain)
 
         debugRenderer = Box2DDebugRenderer()
     }

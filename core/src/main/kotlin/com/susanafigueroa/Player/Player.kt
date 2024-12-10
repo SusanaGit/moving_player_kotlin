@@ -106,7 +106,9 @@ class Player(
         fixtureDef.density = 80f
         fixtureDef.friction = 40f
 
-        body.createFixture(fixtureDef)
+        val fixturePlayer = body.createFixture(fixtureDef)
+
+        fixturePlayer.userData = this
 
         shape.dispose()
     }

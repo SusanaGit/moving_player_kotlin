@@ -1,6 +1,5 @@
 package com.susanafigueroa.villains
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.maps.MapObject
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
@@ -23,12 +22,10 @@ class VillainManage {
     fun createStaticSpriteVillains(map: TiledMap, world: World) {
         val collisionLayer = map.layers[nameCollisionLayer]
         if (collisionLayer == null) {
-            Gdx.app.log("ERROR VILLAINS!!!!!", "LAYER NOT FOUND :(")
             return
         }
 
         for (mapObject in collisionLayer.objects) {
-            Gdx.app.log("GOOD VILLAINS!!!!!", "LAYER FOUND :)")
             val newVillainBody = createStaticVillainBodyFromMap(mapObject, world)
 
             if (newVillainBody != null) {
@@ -46,7 +43,6 @@ class VillainManage {
 
     private fun createStaticVillainBodyFromMap(villainObject: MapObject, world: World): Body? {
         if (villainObject is RectangleMapObject) {
-            Gdx.app.log("GOOD!!!!!", "INSTANCEOF RectangleMapObject, im so happy")
             val rectVillain = villainObject.rectangle
             val bodyDefVillain = BodyDef().apply {
                 type = BodyDef.BodyType.DynamicBody
@@ -66,7 +62,11 @@ class VillainManage {
                 this.shape = shape
                 density = 20f
             }
-            villainBody.createFixture(fixtureDef)
+
+            val fixtureVillain = villainBody.createFixture(fixtureDef)
+
+            fixtureVillain.userData = this
+
             shape.dispose()
 
             return villainBody

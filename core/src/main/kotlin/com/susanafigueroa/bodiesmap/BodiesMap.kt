@@ -19,20 +19,16 @@ class BodiesMap {
         val collisionLayer = map.layers[nameCollisionLayer]
 
         if (collisionLayer == null) {
-            Gdx.app.log("!!!!!", "LAYER NOT FOUND :(")
             return;
         }
 
         for (mapObject in collisionLayer.objects) {
-            Gdx.app.log("GOOD!!!!!", "LAYER FOUND :)");
-
             createStaticBody(mapObject, world)
         }
     }
 
     fun createStaticBody(mapObject: MapObject, world: World) {
         if (mapObject is RectangleMapObject) {
-            Gdx.app.log("GOOD!!!!!", "INSTANCEOF RectangleMapObject, im so happy")
 
             val rectObject = mapObject.rectangle
 

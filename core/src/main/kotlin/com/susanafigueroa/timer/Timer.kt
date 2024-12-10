@@ -32,4 +32,16 @@ class Timer (
             GameInfo.WIDTH.toFloat() / 20
         )
     }
+
+    fun reduceTimer() {
+        if (this.totalTime > 25) {
+            this.totalTime -= 25f
+        } else {
+            this.totalTime = 0f
+        }
+    }
+
+    fun plusTimer() {
+        this.totalTime += 10f
+    }
 }
