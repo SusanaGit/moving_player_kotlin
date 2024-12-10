@@ -16,12 +16,14 @@ import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Array
 import com.susanafigueroa.helpers.GameInfo
+import com.susanafigueroa.timer.Timer
 
 class Player(
     private val world: World,
     name: String,
     x: Float,
-    y: Float
+    y: Float,
+    private val timer: Timer
 ) : Sprite(Texture(name)) {
 
     lateinit var body: Body
@@ -82,7 +84,7 @@ class Player(
         dyingFrames.add(playerAtlas.findRegion("Dead (6)"))
         dyingFrames.add(playerAtlas.findRegion("Dead (17)"))
         dyingFrames.add(playerAtlas.findRegion("Dead (30)"))
-        dyingAnimation = Animation(1f/5f, dyingFrames)
+        dyingAnimation = Animation(1f/4f, dyingFrames)
     }
 
     fun createBody() {
@@ -118,60 +120,62 @@ class Player(
         isWalkingRight = false
         isWalkingLeft = false
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            isWalkingLeft = true
-            body.applyLinearImpulse(
-                Vector2(-3f, 0f), body.worldCenter, true
-            )
-        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            isWalkingRight = true
-            body.applyLinearImpulse(
-                Vector2(3f, 0f), body.worldCenter, true
-            )
-        } else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            isJumping = true
-            body.applyLinearImpulse(
-                Vector2(0f, 3f), body.worldCenter, true
-            )
-        }  else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            isJumping = true
-            body.applyLinearImpulse(
-                Vector2(0f, -3f), body.worldCenter, true
-            )
-        }
-
-        if (Gdx.input.isTouched) {
-
-            isWalkingRight = false
-            isWalkingLeft = false
-
-            val valueTouchX = Gdx.input.x.toFloat()
-            val valueTouchY = Gdx.input.y.toFloat()
-            val screenWidth = Gdx.graphics.width.toFloat()
-            val screenHeight = Gdx.graphics.height.toFloat()
-
-            if (valueTouchX < screenWidth / 2) {
+        if (!isDying) {
+            if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
                 isWalkingLeft = true
                 body.applyLinearImpulse(
                     Vector2(-3f, 0f), body.worldCenter, true
                 )
-            } else {
+            } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 isWalkingRight = true
                 body.applyLinearImpulse(
-                    Vector2(+3f, 0f), body.worldCenter, true
+                    Vector2(3f, 0f), body.worldCenter, true
                 )
-            }
-
-            if (valueTouchY > screenHeight / 2) {
+            } else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                isJumping = true
+                body.applyLinearImpulse(
+                    Vector2(0f, 3f), body.worldCenter, true
+                )
+            }  else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
                 isJumping = true
                 body.applyLinearImpulse(
                     Vector2(0f, -3f), body.worldCenter, true
                 )
-            } else {
-                isJumping = true
-                body.applyLinearImpulse(
-                    Vector2(0f, +3f), body.worldCenter, true
-                )
+            }
+
+            if (Gdx.input.isTouched) {
+
+                isWalkingRight = false
+                isWalkingLeft = false
+
+                val valueTouchX = Gdx.input.x.toFloat()
+                val valueTouchY = Gdx.input.y.toFloat()
+                val screenWidth = Gdx.graphics.width.toFloat()
+                val screenHeight = Gdx.graphics.height.toFloat()
+
+                if (valueTouchX < screenWidth / 2) {
+                    isWalkingLeft = true
+                    body.applyLinearImpulse(
+                        Vector2(-3f, 0f), body.worldCenter, true
+                    )
+                } else {
+                    isWalkingRight = true
+                    body.applyLinearImpulse(
+                        Vector2(+3f, 0f), body.worldCenter, true
+                    )
+                }
+
+                if (valueTouchY > screenHeight / 2) {
+                    isJumping = true
+                    body.applyLinearImpulse(
+                        Vector2(0f, -3f), body.worldCenter, true
+                    )
+                } else {
+                    isJumping = true
+                    body.applyLinearImpulse(
+                        Vector2(0f, +3f), body.worldCenter, true
+                    )
+                }
             }
         }
     }
@@ -188,20 +192,30 @@ class Player(
         if (body.linearVelocity.y == 0f) {
             isJumping = false
         }
+
+        if (timer.getTotalTime().toInt() == 0) {
+            if (!isDying) {
+                isDying = true
+                elapsedTime = 0f
+            }
+            elapsedTime += dt
+        }
     }
 
     fun drawPlayerAnimation(batch: SpriteBatch) {
         val currentTexture: TextureRegion
         val defaultTexture = TextureRegion(texture)
 
-        currentTexture = if (isWalkingRight) {
-            walkingRightAnimation.getKeyFrame(elapsedTime, true)
+        if (isWalkingRight) {
+            currentTexture = walkingRightAnimation.getKeyFrame(elapsedTime, true)
         } else if (isWalkingLeft) {
-            walkingLeftAnimation.getKeyFrame(elapsedTime, true)
+            currentTexture = walkingLeftAnimation.getKeyFrame(elapsedTime, true)
         } else if (isJumping) {
-            jumpingAnimation.getKeyFrame(elapsedTime, true)
+            currentTexture = jumpingAnimation.getKeyFrame(elapsedTime, true)
+        } else if (isDying) {
+            currentTexture = dyingAnimation.getKeyFrame(elapsedTime, false)
         } else {
-            defaultTexture
+            currentTexture = defaultTexture
         }
 
         batch.draw(

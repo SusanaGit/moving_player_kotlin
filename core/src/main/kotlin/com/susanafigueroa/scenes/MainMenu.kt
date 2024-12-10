@@ -76,7 +76,7 @@ class MainMenu (
 
         timer = Timer(BitmapFont(), 120f)
 
-        cuteGirl = Player(world, "player/player.png", GameInfo.WIDTH.toFloat() / 2, GameInfo.HEIGHT.toFloat() / 2)
+        cuteGirl = Player(world, "player/player.png", GameInfo.WIDTH.toFloat() / 2, GameInfo.HEIGHT.toFloat() / 2, timer)
 
         bodiesMap = BodiesMap()
         bodiesMap.createStaticBodiesFromMap(tiledMap, world)

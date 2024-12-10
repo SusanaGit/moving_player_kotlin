@@ -18,8 +18,16 @@ class Timer (
         this.totalTime = totalTime
     }
 
+    fun getTotalTime() : Float {
+        return this.totalTime
+    }
+
     fun runTimer(batch: SpriteBatch?) {
         totalTime -= Gdx.graphics.deltaTime
+
+        if (this.totalTime < 0) {
+            this.totalTime = 0f
+        }
 
         val minutes = totalTime.toInt() / 60
         val seconds = totalTime.toInt() % 60
