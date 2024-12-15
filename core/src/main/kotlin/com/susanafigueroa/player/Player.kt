@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Animation
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
@@ -303,6 +304,19 @@ class Player(
                 bulletPool!!.free(bullet)
                 bullets!!.removeIndex(i)
             }
+        }
+    }
+
+    fun messageGameOver(batch: SpriteBatch?) {
+        if (isDying) {
+            val font = BitmapFont()
+            val showGameOver = "GAME OVER"
+            font.draw(
+                batch,
+                showGameOver,
+                GameInfo.WIDTH - GameInfo.WIDTH.toFloat() / 2,
+                GameInfo.WIDTH.toFloat() / 2
+            )
         }
     }
 }

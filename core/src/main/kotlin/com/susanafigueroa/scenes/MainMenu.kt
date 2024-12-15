@@ -182,6 +182,7 @@ class MainMenu (
         movingPlayerKotlin.getBatch.setProjectionMatrix(hudCamera.combined);
         movingPlayerKotlin.getBatch.begin()
         timer.runTimer(movingPlayerKotlin.getBatch)
+        cuteGirl.messageGameOver(movingPlayerKotlin.getBatch)
         movingPlayerKotlin.getBatch.end()
 
         world.step(Gdx.graphics.deltaTime, 6, 2)
