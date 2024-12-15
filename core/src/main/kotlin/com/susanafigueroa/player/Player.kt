@@ -15,6 +15,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.Pool
+import com.susanafigueroa.bullet.Bullet
 import com.susanafigueroa.helpers.GameInfo
 import com.susanafigueroa.timer.Timer
 
@@ -39,6 +41,13 @@ class Player(
     private var isWalkingLeft: Boolean
     private var isJumping: Boolean
     private var isDying: Boolean
+
+    // bullets
+    private var bulletPool: Pool<Bullet?>? = null
+    private var bullets: Array<Bullet>? = null
+    private var right = false
+    private var left = false
+
 
     init {
         setSize(40f, 40f)
@@ -85,6 +94,19 @@ class Player(
         dyingFrames.add(playerAtlas.findRegion("Dead (17)"))
         dyingFrames.add(playerAtlas.findRegion("Dead (30)"))
         dyingAnimation = Animation(1f/4f, dyingFrames)
+
+
+        // bullets
+        bullets = Array()
+        bulletPool = object : Pool<Bullet?>(2) {
+            override fun newObject(): Bullet {
+                return Bullet(world, "bullet/b1.png", 0f, 0f)
+            }
+        }
+    }
+
+    fun getBullets(): Array<Bullet> {
+        return bullets!!
     }
 
     fun createBody() {
@@ -123,11 +145,15 @@ class Player(
         if (!isDying) {
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
                 isWalkingLeft = true
+                right = false
+                left = true
                 body.applyLinearImpulse(
                     Vector2(-3f, 0f), body.worldCenter, true
                 )
             } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 isWalkingRight = true
+                left = false
+                right = true
                 body.applyLinearImpulse(
                     Vector2(3f, 0f), body.worldCenter, true
                 )
@@ -136,11 +162,13 @@ class Player(
                 body.applyLinearImpulse(
                     Vector2(0f, 3f), body.worldCenter, true
                 )
-            }  else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
                 isJumping = true
                 body.applyLinearImpulse(
                     Vector2(0f, -3f), body.worldCenter, true
                 )
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+                shoot()
             }
 
             if (Gdx.input.isTouched) {
@@ -155,11 +183,15 @@ class Player(
 
                 if (valueTouchX < screenWidth / 2) {
                     isWalkingLeft = true
+                    right = false
+                    left = true
                     body.applyLinearImpulse(
                         Vector2(-3f, 0f), body.worldCenter, true
                     )
                 } else {
                     isWalkingRight = true
+                    left = false
+                    right = true
                     body.applyLinearImpulse(
                         Vector2(+3f, 0f), body.worldCenter, true
                     )
@@ -175,6 +207,10 @@ class Player(
                     body.applyLinearImpulse(
                         Vector2(0f, +3f), body.worldCenter, true
                     )
+                }
+
+                if (Gdx.input.justTouched()) {
+                    shoot()
                 }
             }
         }
@@ -221,5 +257,52 @@ class Player(
         batch.draw(
             currentTexture, x, y, width, height
         )
+    }
+
+    private fun shoot() {
+        val bullet = bulletPool!!.obtain()!!
+        val positionYBullet = (body.position.y * GameInfo.PPM) - height / 2
+
+        if (bullet.body == null) {
+            bullet.createBody()
+        }
+
+        bullet.setElapsedTime(0f)
+
+        if (right) {
+            val positionXBulletRight = ((body.position.x * GameInfo.PPM) - width / 2) + 80
+            bullet.body!!.setTransform(
+                positionXBulletRight / GameInfo.PPM,
+                positionYBullet / GameInfo.PPM,
+                0f
+            )
+            bullet.body!!.setLinearVelocity(10f, 0f)
+        }
+
+        if (left) {
+            val positionXBulletLeft = ((body.position.x * GameInfo.PPM) - width / 2) - 50
+            bullet.body!!.setTransform(
+                positionXBulletLeft / GameInfo.PPM,
+                positionYBullet / GameInfo.PPM,
+                0f
+            )
+            bullet.body!!.setLinearVelocity(-10f, 0f)
+        }
+
+        bullets!!.add(bullet)
+    }
+
+    fun cleanBullets() {
+        for (i in bullets!!.size - 1 downTo 0) {
+            val bullet = bullets!![i]
+            if (bullet.isFinished) {
+                if (bullet.body != null) {
+                    world.destroyBody(bullet.body)
+                }
+                bullet.setElapsedTime(0f)
+                bulletPool!!.free(bullet)
+                bullets!!.removeIndex(i)
+            }
+        }
     }
 }

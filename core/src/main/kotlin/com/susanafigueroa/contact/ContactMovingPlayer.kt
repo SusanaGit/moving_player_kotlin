@@ -5,25 +5,28 @@ import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.ContactImpulse
 import com.badlogic.gdx.physics.box2d.ContactListener
 import com.badlogic.gdx.physics.box2d.Manifold
+import com.susanafigueroa.bullet.Bullet
 import com.susanafigueroa.magicalobjects.chandelier.Chandelier
 import com.susanafigueroa.magicalobjects.chandelier.ChandelierManage
 import com.susanafigueroa.magicalobjects.chest.Chest
 import com.susanafigueroa.magicalobjects.chest.ChestManage
 import com.susanafigueroa.player.Player
 import com.susanafigueroa.timer.Timer
+import com.susanafigueroa.villains.Villain
 import com.susanafigueroa.villains.VillainManage
 
 class ContactMovingPlayer(
     private val timer: Timer,
     private val chestManage: ChestManage,
     private val chandelierManage: ChandelierManage,
+    private val villainManage: VillainManage
 ) : ContactListener {
     override fun beginContact(contact: Contact) {
         val fixtureA = contact.fixtureA
         val fixtureB = contact.fixtureB
 
-        if ((fixtureA.userData is Player && fixtureB.userData is VillainManage) ||
-            (fixtureB.userData is Player && fixtureA.userData is VillainManage)
+        if ((fixtureA.userData is Player && fixtureB.userData is Villain) ||
+            (fixtureB.userData is Player && fixtureA.userData is Villain)
         ) {
             Gdx.app.log(
                 "CONTACT VILLAIN WITH PLAYER",
@@ -60,6 +63,19 @@ class ContactMovingPlayer(
             }
 
             timer.plusTimer()
+        } else if ((fixtureA.userData is Bullet && fixtureB.userData is Villain) ||
+            (fixtureB.userData is Bullet && fixtureA.userData is Villain)
+        ) {
+            Gdx.app.log(
+                "CONTACT BULLET WITH VILLAIN ",
+                fixtureA.getUserData().toString() + " | " + fixtureB.getUserData().toString()
+            )
+
+            if (fixtureA.getUserData() is Villain) {
+                villainManage.removeVillain(fixtureA.userData as Villain)
+            } else {
+                villainManage.removeVillain(fixtureB.userData as Villain)
+            }
         }
     }
 

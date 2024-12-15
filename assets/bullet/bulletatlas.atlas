@@ -1,0 +1,40 @@
+bullet.png
+size: 2000, 400
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+shoot1
+  rotate: false
+  xy: 0, 0
+  size: 400, 400
+  orig: 400, 400
+  offset: 0, 0
+  index: -1
+shoot2
+  rotate: false
+  xy: 400, 0
+  size: 400, 400
+  orig: 400, 400
+  offset: 0, 0
+  index: -1
+shoot3
+  rotate: false
+  xy: 800, 0
+  size: 400, 400
+  orig: 400, 400
+  offset: 0, 0
+  index: -1
+shoot4
+  rotate: false
+  xy: 1200, 0
+  size: 400, 400
+  orig: 400, 400
+  offset: 0, 0
+  index: -1
+shoot7
+  rotate: false
+  xy: 1600, 0
+  size: 400, 400
+  orig: 400, 400
+  offset: 0, 0
+  index: -1

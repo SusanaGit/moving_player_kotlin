@@ -13,12 +13,12 @@ import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.ScreenUtils
 import com.badlogic.gdx.utils.viewport.StretchViewport
 import com.susanafigueroa.MovingPlayerKotlin
-import com.susanafigueroa.player.Player
 import com.susanafigueroa.bodiesmap.BodiesMap
 import com.susanafigueroa.contact.ContactMovingPlayer
 import com.susanafigueroa.helpers.GameInfo
 import com.susanafigueroa.magicalobjects.chandelier.ChandelierManage
 import com.susanafigueroa.magicalobjects.chest.ChestManage
+import com.susanafigueroa.player.Player
 import com.susanafigueroa.timer.Timer
 import com.susanafigueroa.villains.VillainManage
 
@@ -94,7 +94,7 @@ class MainMenu (
         chandelierManage = ChandelierManage()
         chandelierManage.createStaticSpriteChandeliers(tiledMap, world)
 
-        contactMovingPlayer = ContactMovingPlayer(timer, chestManage, chandelierManage)
+        contactMovingPlayer = ContactMovingPlayer(timer, chestManage, chandelierManage, villainManage)
         world.setContactListener(contactMovingPlayer)
 
         debugRenderer = Box2DDebugRenderer()
@@ -135,12 +135,15 @@ class MainMenu (
 
     override fun render(delta: Float) {
 
+        cuteGirl.cleanBullets();
+
         cuteGirl.handleInput()
 
         updateCamera()
 
         chestManage.updateListChests()
         chandelierManage.updateListChandeliers()
+        villainManage.updateListVillains()
 
         cuteGirl.updatePlayer(delta)
 
@@ -154,6 +157,14 @@ class MainMenu (
         movingPlayerKotlin.getBatch.setProjectionMatrix(mapCamera.combined)
 
         movingPlayerKotlin.getBatch.begin()
+
+        for (bullet in cuteGirl.getBullets()) {
+            if (bullet != null) {
+                bullet.updateBullet(delta)
+                bullet.drawBulletAnimation(movingPlayerKotlin.getBatch)
+            }
+        }
+
         cuteGirl.drawPlayerAnimation(movingPlayerKotlin.getBatch)
         for (villain in villainManage.getListVillains()) {
             villain.villainIsWalking(delta)

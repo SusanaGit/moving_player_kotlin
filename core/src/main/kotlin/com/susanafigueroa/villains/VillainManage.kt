@@ -13,6 +13,7 @@ import com.susanafigueroa.helpers.GameInfo
 class VillainManage {
 
     private val listVillains: MutableList<Villain> = mutableListOf()
+    private val listVillainsToRemove: MutableList<Villain> = mutableListOf()
     private val nameCollisionLayer = "villains_layer"
 
     fun getListVillains(): List<Villain> {
@@ -63,9 +64,7 @@ class VillainManage {
                 density = 20f
             }
 
-            val fixtureVillain = villainBody.createFixture(fixtureDef)
-
-            fixtureVillain.userData = this
+            villainBody.createFixture(fixtureDef)
 
             shape.dispose()
 
@@ -73,5 +72,27 @@ class VillainManage {
         } else {
             return null
         }
+    }
+
+    fun removeVillain(villainToRemove: Villain) {
+        if (!listVillainsToRemove.contains(villainToRemove)) {
+            listVillainsToRemove.add(villainToRemove)
+        }
+    }
+
+    fun updateListVillains() {
+        for (villainToRemove in listVillainsToRemove) {
+            val villainTextureToRemove = villainToRemove!!.texture
+            val villainBodyToRemove: Body = villainToRemove.getVillainBody()
+
+            if (villainToRemove != null) {
+                villainBodyToRemove.world.destroyBody(villainBodyToRemove)
+            }
+
+            villainTextureToRemove?.dispose()
+
+            listVillains.remove(villainToRemove)
+        }
+        listVillainsToRemove.clear()
     }
 }

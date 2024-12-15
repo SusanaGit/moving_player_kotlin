@@ -77,8 +77,15 @@ class Villain (
         walkingVillainLeftAnimation = Animation(1f / 5f, walkingVillainLeftFrames)
     }
 
+    fun getVillainBody(): Body {
+        return this.body
+    }
+
     fun addBody(villainBody: Body) {
         body = villainBody
+        for (fixture in villainBody.fixtureList) {
+            fixture.userData = this
+        }
     }
 
     fun updateVillainPositionBody() {
